@@ -2,14 +2,15 @@ const { default: axios } = require("axios");
 const { CronJob } = require("cron");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
-const emails = require('./emails');
 const express = require("express");
 const mongoose = require("mongoose");
 const User = require("./schema/userSchema.js");
+const cors = require("cors");
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 async function connectDB() {
     try {
@@ -34,7 +35,7 @@ async function getUsers() {
 
 
 const job = new CronJob(
-    '* * * * *',
+    '0 8 * * * *',
 
     async function sendMotivationalQuotes() {
         console.log("Cron job is running");
