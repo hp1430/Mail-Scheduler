@@ -1,3 +1,6 @@
 /* 
   Access-Control-Allow-Origin: *
   Content-Security-Policy: upgrade-insecure-requests
+
+/assets/*
+  Content-Type: application/javascript
