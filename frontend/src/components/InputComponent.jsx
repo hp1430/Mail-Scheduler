@@ -7,7 +7,7 @@ export const InputComponent = () => {
 
     const onClickHandler = async () => {
         try {
-            const response = await fetch("http://51.20.189.122:3000/register", {
+            const response = await fetch("http://13.61.196.242:3000/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
