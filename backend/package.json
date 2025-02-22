@@ -9,6 +9,7 @@
   "author": "Himanshu Parashar",
   "license": "ISC",
   "dependencies": {
+    "@google/generative-ai": "^0.22.0",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "cron": "^3.1.7",

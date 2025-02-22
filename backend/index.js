@@ -1,4 +1,3 @@
-const { default: axios } = require("axios");
 const { CronJob } = require("cron");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
@@ -6,6 +5,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const User = require("./schema/userSchema.js");
 const cors = require("cors");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 dotenv.config();
 const app = express();
@@ -33,18 +33,19 @@ async function getUsers() {
     }
 }
 
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 
 const job = new CronJob(
-    '0 8 * * * *',
+    '0 8 * * *', // Runs everyday at 8:00 AM
 
     async function sendMotivationalQuotes() {
         console.log("Cron job is running");
 
-        const response = await axios.get('https://zenquotes.io/api/today');
-
-        const quote = response.data[0];
-
-        console.log(quote.q);
+        const result = await model.generateContent("Provide only one funny Hindi morning greetings in English script. Just text nothing else");
+        const response = await result.response;
+        const text = response.text();
 
         const transporter = nodemailer.createTransport({
             host: 'smtp.zoho.in',
@@ -64,8 +65,8 @@ const job = new CronJob(
             const mailOptions = {
                 from: process.env.ID,
                 to: email.email,
-                subject: 'Thought of the day',
-                text: quote.q
+                subject: 'Good Morning...',
+                text: text
             };
 
             await transporter.sendMail(mailOptions, (error, info) => {
