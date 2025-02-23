@@ -38,7 +38,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 
 const job = new CronJob(
-    '0 8 * * *', // Runs everyday at 8:00 AM
+    '3 9 * * *', // Runs everyday at 8:00 AM
 
     async function sendMotivationalQuotes() {
         console.log("Cron job is running");
