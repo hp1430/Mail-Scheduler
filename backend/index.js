@@ -38,7 +38,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 
 const job = new CronJob(
-    '3 9 * * *', // Runs everyday at 8:00 AM
+    '0 8 * * *', // Runs everyday at 8:00 AM
 
     async function sendMotivationalQuotes() {
         console.log("Cron job is running");
@@ -89,9 +89,23 @@ const job = new CronJob(
 
 app.post('/register', async (req, res) => {
     try {
+        if(!req.body.email || req.body.email === "" || !req.body.email.includes("@")) {
+            return res.status(401).json({
+                success: false,
+                message: "Email is required"
+            })
+        }
+        const existingUser = await User.findOne({ email: req.body.email });
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: "User already exists"
+            });
+        }
+
         const user = await User.create({ email: req.body.email });
         res.status(201).json({
-            status: true,
+            success: true,
             message: "Registered Successfully",
             data: user
         })
@@ -99,7 +113,7 @@ app.post('/register', async (req, res) => {
     catch(error) {
         console.log("Error while registering user", error);
         res.status(500).json({
-            status: false,
+            success: false,
             message: "Internal Server Error"
         })
     }

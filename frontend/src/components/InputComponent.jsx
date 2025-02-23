@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export const InputComponent = () => {
     const [email, setEmail] = useState("");
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState("");
 
     const onClickHandler = async () => {
         try {
@@ -15,12 +15,20 @@ export const InputComponent = () => {
                 body: JSON.stringify({ email }),
             });
 
-            if(response.ok) {
-                setSuccess(true);
+            if(response.ok) { 
+                setSuccess("true");
+                setEmail("");
+            }
+            else if(response.status === 400) {
+                setSuccess("exist");
+                setEmail("");
+            }
+            else if(response.status === 401) {
+                setSuccess("invalid");
                 setEmail("");
             }
             else {
-                setSuccess(false);
+                setSuccess("false");
             }
 
             const data = await response.json();
@@ -50,8 +58,10 @@ export const InputComponent = () => {
                     Submit
                 </button>
 
-                {success && <p className="success-message">Subscription successful!</p>}
-                
+                {success==="true" && <p className="success-message">Subscription successful!</p>}
+                {success==="exist" && <p className="error-message">User already exists!</p>}
+                {success==="false" && <p className="error-message">Subscription failed, Try again !</p>}
+                {success==="invalid" && <p className="error-message">Invalid Email Id!</p>}
             </div>
         </div>
     );
